@@ -51,6 +51,9 @@
         var createScene = async function () {
         
             var scene = new BABYLON.Scene(engine);
+            var gravityVector = new BABYLON.Vector3(0,-9.81, 0);
+            var physicsPlugin = new BABYLON.CannonJSPlugin();
+            scene.enablePhysics(gravityVector, physicsPlugin);
             var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
             camera.setTarget(BABYLON.Vector3.Zero());
             camera.attachControl(canvas, true);
@@ -59,59 +62,164 @@
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
             sphere.position.y = 2;
             sphere.position.z = 5;
-        
+            
+            
+            
+            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.3 }, scene);
+            
+
             const xr = await scene.createDefaultXRExperienceAsync({
                 uiOptions: {
                     sessionMode: 'immersive-ar',
                     referenceSpaceType: "unbounded",
                 },
-                optionalFeatures: true,
+                optionalFeatures: ["hit-test", "anchors"],
             });
 
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-            var placeBtn = BABYLON.GUI.Button.CreateSimpleButton("placeBtn", "Place model");
-            placeBtn.width = "150px";
-            placeBtn.height = "50px";
-            placeBtn.color = "white";
-            placeBtn.cornerRadius = 20;
-            placeBtn.background = "green";
-            placeBtn.top = "40%";
+            
+            // put ui into a function with global vars and call it once - too messy here
+            // var placeBtn = BABYLON.GUI.Button.CreateSimpleButton("placeBtn", "Place model");
+            // placeBtn.width = "200px";
+            // placeBtn.height = "100px";
+            // placeBtn.color = "white";
+            // placeBtn.cornerRadius = 20;
+            // placeBtn.background = "green";
+            // placeBtn.top = "40%";
+            // advancedTexture.addControl(placeBtn);
 
-            advancedTexture.addControl(placeBtn);
+            var placeBall = BABYLON.GUI.Button.CreateSimpleButton("placeBall", "Place ball");
+            placeBall.width = "200px";
+            placeBall.height = "100px";
+            placeBall.color = "white";
+            placeBall.cornerRadius = 20;
+            placeBall.background = "green";
+            placeBall.top = "30%";
+            advancedTexture.addControl(placeBall);
+
+
+
+
+            var placeGrnd = BABYLON.GUI.Button.CreateSimpleButton("placeGrnd", "Place ground");
+            placeGrnd.width = "200px";
+            placeGrnd.height = "100px";
+            placeGrnd.color = "white";
+            placeGrnd.cornerRadius = 20;
+            placeGrnd.background = "green";
+            placeGrnd.top = "40%";
+            advancedTexture.addControl(placeGrnd);
+
+            //marker
+            const marker = BABYLON.MeshBuilder.CreateTorus('marker', { diameter: 0.15, thickness: 0.05 });
+            // const marker = BABYLON.MeshBuilder.CreateCylinder("marker", {height:2, diameterTop:0}, scene);
+            marker.isVisible = false;
+            marker.rotationQuaternion = new BABYLON.Quaternion();
+
+            const fm = xr.baseExperience.featuresManager;
+            const xrTest = fm.enableFeature(BABYLON.WebXRHitTest, "latest", {
+                enableTransientHitTest: false
+            });
+            const anchors = fm.enableFeature(BABYLON.WebXRAnchorSystem, 'latest');
+            const xrBackgroundRemover = fm.enableFeature(BABYLON.WebXRBackgroundRemover.Name);
+            
+    
+            let hitTest;
+            var cloneForDrag;
+
+            xrTest.onHitTestResultObservable.add((results) => {
+                if (results.length) {
+                    hitTest = results[0];
+                    marker.isVisible = true;
+                    hitTest.transformationMatrix.decompose(marker.scaling, marker.rotationQuaternion, marker.position);
+                } else {
+                    hitTest = undefined;
+                    marker.isVisible = false;
+                }
+            });
+
+            placeGrnd.onPointerUpObservable.add(function() {
+                // place the physics ground for objects to interact with
+                if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
+                    anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
+                    //  spawn ground at anchor first before doing anything
+                    var ground = new BABYLON.MeshBuilder.CreateBox("ground", { height: 1, width: 4, depth: 4 });
+                    console.log(ground.getPivotPoint()); // returns Vector3
+                    ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
+                    console.log(ground.getPivotPoint()); // returns Vector3
+                    ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.0, restitution: 0.7 }, scene);
+                    anchors.onAnchorAddedObservable.add((anchor) => {
+                        // anchor.transformationMatrix.decompose(ground.scaling, ground.rotationQuaternion, ground.position);
+                        
+                        anchor.attachedNode = ground;
+ 
+                    })
+                }
+            });
+
+            placeBall.onPointerUpObservable.add(function() {
+                // place a ball
+                if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
+                    // anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
+                    let sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {segments: 16, diameter: 0.2});
+                    hitTest.transformationMatrix.decompose(sphere1.scaling, sphere1.rotationQuaternion, sphere1.position);
+                    sphere1.position.y = 1;
+                    sphere1.physicsImpostor = new BABYLON.PhysicsImpostor(sphere1, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.3 }, scene);        
+                    console.log("placed physics ball");
+                    // anchors.onAnchorAddedObservable.ad,d((anchor) => {
+                    //     anchor.attachedNode = sphere1;
+                        
+                    // })
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
             return scene;
         };
-                window.initFunction = async function() {               
-                    var asyncEngineCreation = async function() {
-                        try {
+        window.initFunction = async function () {
+                var asyncEngineCreation = async function () {
+                    try {
                         return createDefaultEngine();
-                        } catch(e) {
+                    } catch (e) {
                         console.log("the available createEngine function failed. Creating the default engine instead");
                         return createDefaultEngine();
-                        }
                     }
-
-                    window.engine = await asyncEngineCreation();
-        if (!engine) throw 'engine should not be null.';
-        window.scene = createScene();};
-        initFunction().then(() => {scene.then(returnedScene => { sceneToRender = returnedScene; });
-                
-            engine.runRenderLoop(function () {
-                if (sceneToRender && sceneToRender.activeCamera) {
-                    sceneToRender.render();
                 }
+
+                window.engine = await asyncEngineCreation();
+                if (!engine) throw 'engine should not be null.';
+                window.scene = createScene();
+            };
+            initFunction().then(() => {
+                scene.then(returnedScene => { sceneToRender = returnedScene; });
+
+                engine.runRenderLoop(function () {
+                    if (sceneToRender && sceneToRender.activeCamera) {
+                        sceneToRender.render();
+                    }
+                });
             });
-        });
 
         // Resize
         window.addEventListener("resize", function () {
             engine.resize();
         });
-            
-    
+        
+        
+        
     </script>
 </body>
 </html>
