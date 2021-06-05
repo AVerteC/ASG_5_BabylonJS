@@ -62,9 +62,25 @@
         
             const xr = await scene.createDefaultXRExperienceAsync({
                 uiOptions: {
-                    sessionMode: 'immersive-ar'
-                }
+                    sessionMode: 'immersive-ar',
+                    referenceSpaceType: "unbounded",
+                },
+                optionalFeatures: true,
             });
+
+            var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            var placeBtn = BABYLON.GUI.Button.CreateSimpleButton("placeBtn", "Place model");
+            placeBtn.width = "150px";
+            placeBtn.height = "50px";
+            placeBtn.color = "white";
+            placeBtn.cornerRadius = 20;
+            placeBtn.background = "green";
+            placeBtn.top = "40%";
+
+            advancedTexture.addControl(placeBtn);
+
+
+
 
             return scene;
         };
