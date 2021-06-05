@@ -48,6 +48,7 @@
         var scene = null;
         var sceneToRender = null;
         var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        
         var createScene = async function () {
         
             var scene = new BABYLON.Scene(engine);
@@ -59,13 +60,6 @@
             camera.attachControl(canvas, true);
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
-            var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-            sphere.position.y = 2;
-            sphere.position.z = 5;
-            
-            
-            
-            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.3 }, scene);
             
 
             const xr = await scene.createDefaultXRExperienceAsync({
@@ -88,32 +82,56 @@
             // placeBtn.top = "40%";
             // advancedTexture.addControl(placeBtn);
 
-            var placeBall = BABYLON.GUI.Button.CreateSimpleButton("placeBall", "Place ball");
-            placeBall.width = "200px";
-            placeBall.height = "100px";
-            placeBall.color = "white";
-            placeBall.cornerRadius = 20;
-            placeBall.background = "green";
-            placeBall.top = "30%";
-            advancedTexture.addControl(placeBall);
-
-
-
-
             var placeGrnd = BABYLON.GUI.Button.CreateSimpleButton("placeGrnd", "Place ground");
             placeGrnd.width = "200px";
             placeGrnd.height = "100px";
             placeGrnd.color = "white";
             placeGrnd.cornerRadius = 20;
             placeGrnd.background = "green";
-            placeGrnd.top = "40%";
+            placeGrnd.top = "0%";
+            placeGrnd.left = "40%";
             advancedTexture.addControl(placeGrnd);
+            
+            var placeBall = BABYLON.GUI.Button.CreateSimpleButton("placeBall", "Place ball");
+            placeBall.width = "200px";
+            placeBall.height = "100px";
+            placeBall.color = "white";
+            placeBall.cornerRadius = 20;
+            placeBall.background = "green";
+            placeBall.top = "8%";
+            placeBall.left = "40%";
+            advancedTexture.addControl(placeBall);
+
+            var placeCube = BABYLON.GUI.Button.CreateSimpleButton("placeCube", "Place cube");
+            placeCube.width = "200px";
+            placeCube.height = "100px";
+            placeCube.color = "white";
+            placeCube.cornerRadius = 20;
+            placeCube.background = "green";
+            placeCube.top = "16%";
+            placeCube.left = "40%";
+            advancedTexture.addControl(placeCube);
+
+            var placeExplosion = BABYLON.GUI.Button.CreateSimpleButton("placeExplosion", "Place explosion");
+            placeExplosion.width = "200px";
+            placeExplosion.height = "100px";
+            placeExplosion.color = "white";
+            placeExplosion.cornerRadius = 20;
+            placeExplosion.background = "green";
+            placeExplosion.top = "24%";
+            placeExplosion.left = "40%";
+            advancedTexture.addControl(placeExplosion);
 
             //marker
             const marker = BABYLON.MeshBuilder.CreateTorus('marker', { diameter: 0.15, thickness: 0.05 });
             // const marker = BABYLON.MeshBuilder.CreateCylinder("marker", {height:2, diameterTop:0}, scene);
             marker.isVisible = false;
             marker.rotationQuaternion = new BABYLON.Quaternion();
+
+            let markerMat = new BABYLON.StandardMaterial("markerMat", scene);
+            markerMat.diffuseColor = new BABYLON.Color3.Green();
+            marker.material = markerMat;
+
 
             const fm = xr.baseExperience.featuresManager;
             const xrTest = fm.enableFeature(BABYLON.WebXRHitTest, "latest", {
@@ -122,9 +140,11 @@
             const anchors = fm.enableFeature(BABYLON.WebXRAnchorSystem, 'latest');
             const xrBackgroundRemover = fm.enableFeature(BABYLON.WebXRBackgroundRemover.Name);
             
-    
-            let hitTest;
-            var cloneForDrag;
+            var hitTest;
+            
+            var physicsHelper = new BABYLON.PhysicsHelper(scene);
+            var physicsViewer = new BABYLON.Debug.PhysicsViewer();
+
 
             xrTest.onHitTestResultObservable.add((results) => {
                 if (results.length) {
@@ -140,53 +160,31 @@
             placeGrnd.onPointerUpObservable.add(function() {
                 // place the physics ground for objects to interact with
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
-                    //  spawn ground at anchor first before doing anything
-                    var ground = new BABYLON.MeshBuilder.CreateBox("ground", { height: 1, width: 4, depth: 4 });
-                    console.log(ground.getPivotPoint()); // returns Vector3
-                    ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
-                    console.log(ground.getPivotPoint()); // returns Vector3
-                    ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.0, restitution: 0.7 }, scene);
-                    anchors.onAnchorAddedObservable.add((anchor) => {
-                        // anchor.transformationMatrix.decompose(ground.scaling, ground.rotationQuaternion, ground.position);
-                        
-                        anchor.attachedNode = ground;
- 
-                    })
+                    addObject(scene, physicsHelper, hitTest, anchors, "ground");
                 }
             });
 
             placeBall.onPointerUpObservable.add(function() {
                 // place a ball
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    // anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
-                    let sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {segments: 16, diameter: 0.2});
-                    hitTest.transformationMatrix.decompose(sphere1.scaling, sphere1.rotationQuaternion, sphere1.position);
-                    sphere1.position.y = 1;
-                    sphere1.physicsImpostor = new BABYLON.PhysicsImpostor(sphere1, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.3 }, scene);        
-                    console.log("placed physics ball");
-                    // anchors.onAnchorAddedObservable.ad,d((anchor) => {
-                    //     anchor.attachedNode = sphere1;
-                        
-                    // })
+                    addObject(scene, physicsHelper, hitTest, anchors, "ball");
                 }
             });
 
+            placeCube.onPointerUpObservable.add(function() {
+                // place a ball
+                if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
+                    addObject(scene, physicsHelper, hitTest, anchors, "cube");
+                }
+            });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            placeExplosion.onPointerUpObservable.add(function() {
+                // place explosion
+                if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
+                    addObject(scene, physicsHelper, hitTest, anchors, "explosion");
+                }
+            });
+  
             return scene;
         };
         window.initFunction = async function () {
@@ -217,7 +215,78 @@
         window.addEventListener("resize", function () {
             engine.resize();
         });
-        
+
+        function addObject(scene, physicsHelper, hitTest, anchors, type) {
+            if (type == "ball") {
+                let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 16, diameter: 0.2});
+                var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial");
+                sphereMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                sphere.material = sphereMaterial;
+                hitTest.transformationMatrix.decompose(sphere.scaling, sphere.rotationQuaternion, sphere.position);
+                sphere.position.y = 1;
+                sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                physicsViewer.showImpostor(sphere.physicsImpostor);
+                console.log("placed physics ball");
+            }
+
+            if (type == "cube") {
+                let cube = BABYLON.MeshBuilder.CreateBox("box", {size: 0.2});
+                var cubeMat = new BABYLON.StandardMaterial("sphereMaterial");
+                cubeMat.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                cube.material = cubeMat;
+                hitTest.transformationMatrix.decompose(cube.scaling, cube.rotationQuaternion, cube.position);
+                cube.position.y = 1;
+                cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                physicsViewer.showImpostor(sphere.physicsImpostor);
+                console.log("placed physics cube");
+            }
+
+            if (type == "ground") {
+                anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
+                //  spawn ground at anchor first before doing anything
+                var ground = new BABYLON.MeshBuilder.CreateBox("ground", { height: 1, width: 4, depth: 4 });
+                const groundMat = new BABYLON.StandardMaterial("groundMat");
+                groundMat.diffuseColor = new BABYLON.Color3.Blue();
+                ground.material = groundMat;
+                // console.log(ground.getPivotPoint()); // returns Vector3
+                ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
+                // console.log(ground.getPivotPoint()); // returns Vector3
+                ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.8, restitution: 0.7 });
+                physicsViewer.showImpostor(sphere.physicsImpostor);
+                anchors.onAnchorAddedObservable.add((anchor) => {
+                    // anchor.transformationMatrix.decompose(ground.scaling, ground.rotationQuaternion, ground.position);
+                    console.log("placed physics ground");
+                    anchor.attachedNode = ground;
+                })
+            }
+
+            if (type == "explosion") {
+                let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 16, diameter: 1});
+                var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial");
+                sphereMaterial.diffuseColor = new BABYLON.Color3.Red();
+                sphere.material = sphereMaterial;
+                hitTest.transformationMatrix.decompose(sphere.scaling, sphere.rotationQuaternion, sphere.position);
+
+                var origin = sphere.position;
+
+                // console.log("explosion origin", origin);
+                var radius = 0.5;
+                var strength = 300;
+                var falloff = BABYLON.PhysicsRadialImpulseFalloff.Linear;
+                var explosionEvent = physicsHelper.applyRadialExplosionImpulse( // or .applyRadialExplosionForce
+                    origin,
+                    radius,
+                    strength,
+                    falloff
+                );
+                console.log("placed explosion");
+            }
+
+            // if (type == "tornado") {
+
+            // }
+            
+        }
         
         
     </script>
