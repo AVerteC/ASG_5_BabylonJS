@@ -288,6 +288,18 @@
                 console.log("placed physics cylinder");
             }
 
+            if(type == "cone") {
+                let cone = BABYLON.MeshBuilder.CreateCylinder("cone", { height: 0.5, diameterTop: 0, diameterBottom: 0.2});
+                var coneMaterial = new BABYLON.StandardMaterial("speherMaterial");
+                coneMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                cone.material = coneMaterial;
+                hitTest.transformationMatrix.decompose(cone.scaling, cone.rotationQuaternion, cone.position);
+                cone.position.y = 1;
+                cone.physicsImpostor = new BABYLON.PhysicsImpostor(cone, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                //physicsViewer.showImpostor(sphere.physicsImpostor);
+                console.log("placed physics cone");
+            }
+
             if (type == "ground") {
                 anchors.addAnchorPointUsingHitTestResultAsync(hitTest);
                 //  spawn ground at anchor first before doing anything
