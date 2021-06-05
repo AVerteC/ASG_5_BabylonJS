@@ -19,6 +19,9 @@
         <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
         <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
         <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+        <!-- <script src="dat.gui.js"></script> -->
+        
+
 
         <style>
             html, body {
@@ -37,6 +40,17 @@
         </style>
     </head>
 <body>
+    <div id = "overlay">
+        <header>
+            <details open>
+                <summary>dat.gui WebXR DOM Overlay</summary>
+                <p>
+                    dat.gui x WebXR:immersive-ar
+                <div id="warning-zone"></div>
+                <button id="xr-button" class="barebones-button" disabled>XR not found</button>
+            </details>
+        </header>
+    </div>
     <canvas id="renderCanvas"></canvas>
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -62,7 +76,7 @@
                     sessionMode: 'immersive-ar'
                 }
             });
-        
+
             return scene;
         };
                 window.initFunction = async function() {               
@@ -91,6 +105,8 @@
         window.addEventListener("resize", function () {
             engine.resize();
         });
+            
+    
     </script>
 </body>
 </html>
