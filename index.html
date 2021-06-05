@@ -123,6 +123,16 @@
             placeExplosion.left = "40%";
             advancedTexture.addControl(placeExplosion);
 
+            var placeTornado = BABYLON.GUI.Button.CreateSimpleButton("placeTornado", "Place tornado");
+            placeTornado.width = "200px";
+            placeTornado.height = "100px";
+            placeTornado.color = "white";
+            placeTornado.cornerRadius = 20;
+            placeTornado.background = "green";
+            placeTornado.top = "48%";
+            placeTornado.left = "40%";
+            advancedTexture.addControl(placeTornado);
+
             //marker
             const marker = BABYLON.MeshBuilder.CreateTorus('marker', { diameter: 0.15, thickness: 0.05 });
             // const marker = BABYLON.MeshBuilder.CreateCylinder("marker", {height:2, diameterTop:0}, scene);
@@ -183,6 +193,13 @@
                 // place explosion
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
                     addObject(scene, physicsHelper, hitTest, anchors, "explosion");
+                }
+            });
+
+            placeTornado.onPointerUpObservable.add(function() {
+                // place explosion
+                if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
+                    addObject(scene, physicsHelper, hitTest, anchors, "tornado");
                 }
             });
   
@@ -272,7 +289,7 @@
                 var explosionEvent = physicsHelper.applyRadialExplosionImpulse( 
                     origin, {
                     radius: 1,
-                    strength: 100,
+                    strength: 90,
                     falloff:BABYLON.PhysicsRadialImpulseFalloff.Linear
                     }
                 );
@@ -280,12 +297,46 @@
                 sphere.dispose();
             }
 
-            // if (type == "tornado") {
-
-            // }
-            
+            if (type == "tornado") {
+                let box = BABYLON.MeshBuilder.CreateBox("Box", {size: 1});
+                // var cylinderMaterial = new BABYLON.StandardMaterial("sphereMaterial");
+                // cylinderMaterial.diffuseColor = new BABYLON.Color3.Red();
+                // cylinderMaterial.wireframe = true;
+                // cylinder.material = cylinderMaterial;
+                // ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
+                hitTest.transformationMatrix.decompose(box.scaling, box.rotationQuaternion, box.position);
+                box.position.y = -2;
+                var origin = box.position;
+                
+                // setTimeout(function() {
+                var updraftEvent = physicsHelper.updraft(
+                    origin,
+                    {
+                        radius: 0.5,
+                        strength: 5,
+                        height: 2,
+                    }
+                );
+                updraftEvent.enable();
+                console.log("placed updraft");
+                
+                var vortexEvent = physicsHelper.vortex(
+                    origin,
+                    {
+                        radius: 0.5,
+                        strength: 2,
+                        height: 2,
+                    }
+                );
+                vortexEvent.enable();
+                console.log("placed rotation");
+                box.dispose();
+                setTimeout(function() {
+                        updraftEvent.disable();
+                        vortexEvent.disable();
+                },5000); 
+            }
         }
-        
         
     </script>
 </body>
