@@ -76,10 +76,23 @@
             placeBtn.cornerRadius = 20;
             placeBtn.background = "green";
             placeBtn.top = "40%";
-
             advancedTexture.addControl(placeBtn);
 
-
+            var slider = new BABYLON.GUI.Slider();
+            slider.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            slider.minimum = 0;
+            slider.maximum = 2 * Math.PI;
+            slider.color = "green";
+            slider.value = 0;
+            slider.height = "20px";
+            slider.width = "200px";
+            slider.onValueChangedObservable.add(function(value) {
+                header.text = "Y-rotation: " + (BABYLON.Tools.ToDegrees(value) | 0) + " deg";
+                if (skull) {
+                    skull.rotation.y = value;
+                }
+            });
+            panel.addControl(slider);
 
 
             return scene;
