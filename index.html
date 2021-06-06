@@ -2,8 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-        <title>Babylon.js sample code</title>
+        <title>CSE 160 / ASG 5 AR Experience</title>
 
         <!-- Babylon.js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
@@ -19,9 +18,6 @@
         <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
         <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
         <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
-        <!-- <script src="dat.gui.js"></script> -->
-        
-
 
         <style>
             html, body {
@@ -73,29 +69,11 @@
 
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
             
-            // put ui into a function with global vars and call it once - too messy here
-            // var placeBtn = BABYLON.GUI.Button.CreateSimpleButton("placeBtn", "Place model");
-            // placeBtn.width = "200px";
-            // placeBtn.height = "100px";
-            // placeBtn.color = "white";
-            // placeBtn.cornerRadius = 20;
-            // placeBtn.background = "green";
-            // placeBtn.top = "40%";
-            // advancedTexture.addControl(placeBtn);
-
-            var placeGrnd = BABYLON.GUI.Button.CreateSimpleButton("placeGrnd", "Place ground");
-            placeGrnd.width = "200px";
-            placeGrnd.height = "100px";
-            placeGrnd.color = "white";
-            placeGrnd.cornerRadius = 20;
-            placeGrnd.background = "purple";
-            placeGrnd.top = "-25%";
-            placeGrnd.left = "40%";
-            advancedTexture.addControl(placeGrnd);
-            
+            // right side
             var placeBall = BABYLON.GUI.Button.CreateSimpleButton("placeBall", "Place ball");
             placeBall.width = "200px";
             placeBall.height = "100px";
+            placeBall.fontSize = "30px";
             placeBall.color = "white";
             placeBall.cornerRadius = 20;
             placeBall.background = "green";
@@ -106,6 +84,7 @@
             var placeCube = BABYLON.GUI.Button.CreateSimpleButton("placeCube", "Place cube");
             placeCube.width = "200px";
             placeCube.height = "100px";
+            placeCube.fontSize = "30px";
             placeCube.color = "white";
             placeCube.cornerRadius = 20;
             placeCube.background = "green";
@@ -116,6 +95,7 @@
             var placeCylinder = BABYLON.GUI.Button.CreateSimpleButton("placeCylinder", "Place Cylinder");
             placeCylinder.width = "200px";
             placeCylinder.height = "100px";
+            placeCylinder.fontSize = "30px";
             placeCylinder.color = "white";
             placeCylinder.cornerRadius = 20;
             placeCylinder.background = "green";
@@ -126,6 +106,7 @@
             var placeCone = BABYLON.GUI.Button.CreateSimpleButton("placeCone", "Place Cone");
             placeCone.width = "200px";
             placeCone.height = "100px";
+            placeCone.fontSize = "30px";
             placeCone.color = "white";
             placeCone.cornerRadius = 20;
             placeCone.background = "green";
@@ -133,29 +114,42 @@
             placeCone.left = "40%";
             advancedTexture.addControl(placeCone);
 
+            // left side
+            var placeGrnd = BABYLON.GUI.Button.CreateSimpleButton("placeGrnd", "Place ground");
+            placeGrnd.width = "200px";
+            placeGrnd.height = "100px";
+            placeGrnd.fontSize = "30px";
+            placeGrnd.color = "white";
+            placeGrnd.cornerRadius = 20;
+            placeGrnd.background = "purple";
+            placeGrnd.top = "-10%";
+            placeGrnd.left = "-40%";
+            advancedTexture.addControl(placeGrnd);
+
             var placeExplosion = BABYLON.GUI.Button.CreateSimpleButton("placeExplosion", "Place explosion");
             placeExplosion.width = "200px";
             placeExplosion.height = "100px";
+            placeExplosion.fontSize = "30px";
             placeExplosion.color = "white";
             placeExplosion.cornerRadius = 20;
             placeExplosion.background = "#800020";
-            placeExplosion.top = "25%";
-            placeExplosion.left = "40%";
+            placeExplosion.top = "0%";
+            placeExplosion.left = "-40%";
             advancedTexture.addControl(placeExplosion);
 
             var placeTornado = BABYLON.GUI.Button.CreateSimpleButton("placeTornado", "Place tornado");
             placeTornado.width = "200px";
             placeTornado.height = "100px";
+            placeTornado.fontSize = "30px";
             placeTornado.color = "white";
             placeTornado.cornerRadius = 20;
-            placeTornado.background = "green";
-            placeTornado.top = "48%";
-            placeTornado.left = "40%";
+            placeTornado.background = "#800020";
+            placeTornado.top = "10%";
+            placeTornado.left = "-40%";
             advancedTexture.addControl(placeTornado);
 
             //marker
             const marker = BABYLON.MeshBuilder.CreateTorus('marker', { diameter: 0.15, thickness: 0.05 });
-            // const marker = BABYLON.MeshBuilder.CreateCylinder("marker", {height:2, diameterTop:0}, scene);
             marker.isVisible = false;
             marker.rotationQuaternion = new BABYLON.Quaternion();
 
@@ -173,9 +167,6 @@
             
             var hitTest;
             
-            
-            // var physicsViewer = new BABYLON.Debug.PhysicsViewer();
-
 
             xrTest.onHitTestResultObservable.add((results) => {
                 if (results.length) {
@@ -277,8 +268,6 @@
                 hitTest.transformationMatrix.decompose(sphere.scaling, sphere.rotationQuaternion, sphere.position);
                 sphere.position.y = 1;
                 sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
-                // physicsViewer.showImpostor(sphere.physicsImpostor);
-                console.log("placed physics ball");
             }
 
             if (type == "cube") {
@@ -289,8 +278,6 @@
                 hitTest.transformationMatrix.decompose(cube.scaling, cube.rotationQuaternion, cube.position);
                 cube.position.y = 1;
                 cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
-                // physicsViewer.showImpostor(sphere.physicsImpostor);
-                console.log("placed physics cube");
             }
 
             if(type == "cylinder") {
@@ -301,8 +288,6 @@
                 hitTest.transformationMatrix.decompose(cylinder.scaling, cylinder.rotationQuaternion, cylinder.position);
                 cylinder.position.y = 1;
                 cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
-                //physicsViewer.showImpostor(sphere.physicsImpostor);
-                console.log("placed physics cylinder");
             }
 
             if(type == "cone") {
@@ -313,8 +298,6 @@
                 hitTest.transformationMatrix.decompose(cone.scaling, cone.rotationQuaternion, cone.position);
                 cone.position.y = 1;
                 cone.physicsImpostor = new BABYLON.PhysicsImpostor(cone, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
-                //physicsViewer.showImpostor(sphere.physicsImpostor);
-                console.log("placed physics cone");
             }
 
             if (type == "ground") {
@@ -324,14 +307,9 @@
                 const groundMat = new BABYLON.StandardMaterial("groundMat");
                 groundMat.diffuseColor = new BABYLON.Color3.Blue();
                 ground.material = groundMat;
-                // console.log(ground.getPivotPoint()); // returns Vector3
                 ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
-                // console.log(ground.getPivotPoint()); // returns Vector3
                 ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.8, restitution: 0.7 });
-                // physicsViewer.showImpostor(sphere.physicsImpostor);
                 anchors.onAnchorAddedObservable.add((anchor) => {
-                    // anchor.transformationMatrix.decompose(ground.scaling, ground.rotationQuaternion, ground.position);
-                    console.log("placed physics ground");
                     anchor.attachedNode = ground;
                 })
             }
@@ -351,7 +329,6 @@
                     falloff:BABYLON.PhysicsRadialImpulseFalloff.Linear
                     }
                 );
-                console.log("placed explosion");
                 sphere.dispose();
             }
 
@@ -369,7 +346,6 @@
                     }
                 );
                 updraftEvent.enable();
-                console.log("placed updraft");
                 
                 var vortexEvent = physicsHelper.vortex(
                     origin,
@@ -380,7 +356,6 @@
                     }
                 );
                 vortexEvent.enable();
-                console.log("placed rotation");
                 box.dispose();
                 setTimeout(function() {
                         updraftEvent.disable();
