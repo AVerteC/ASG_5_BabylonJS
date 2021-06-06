@@ -337,7 +337,7 @@
             }
 
             if(type == "cylinder") {
-                let cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 0.5, diameter: 0.2});
+                let cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 0.2, diameter: 0.2});
                 var cylinderMaterial = new BABYLON.StandardMaterial("speherMaterial");
                 cylinderMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 cylinder.material = cylinderMaterial;
@@ -350,7 +350,7 @@
             }
 
             if(type == "cone") {
-                let cone = BABYLON.MeshBuilder.CreateCylinder("cone", { height: 0.5, diameterTop: 0, diameterBottom: 0.2});
+                let cone = BABYLON.MeshBuilder.CreateCylinder("cone", { height: 0.2, diameterTop: 0, diameterBottom: 0.2});
                 var coneMaterial = new BABYLON.StandardMaterial("speherMaterial");
                 coneMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 cone.material = coneMaterial;
