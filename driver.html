@@ -55,9 +55,20 @@
             var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
             camera.setTarget(BABYLON.Vector3.Zero());
             camera.attachControl(canvas, true);
-            var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 1), scene);
-            light.intensity = 0.7;
-            
+            // var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, -1, -1), scene);
+            // light.intensity = 0.7;
+
+            var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, -1, -1), scene);
+            light2.intensity = 1.0;
+            light2.position = new BABYLON.Vector3(80,40,80);
+            let sphereSun = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 16, diameter: 30});
+            var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial");
+            sphereMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            sphereSun.material = sphereMaterial;
+            sphereSun.position = light2.position; 
+            var shadowGenerator = new BABYLON.ShadowGenerator(8192, light2);
+            // shadowGenerator.useBlurExponentialShadowMap = true;
+            shadowGenerator.setDarkness(0);
 
             const xr = await scene.createDefaultXRExperienceAsync({
                 uiOptions: {
@@ -148,6 +159,29 @@
             placeTornado.left = "-40%";
             advancedTexture.addControl(placeTornado);
 
+            var resetBtn = BABYLON.GUI.Button.CreateSimpleButton("resetBtn", "Reset Scene");
+            resetBtn.width = "200px";
+            resetBtn.height = "100px";
+            resetBtn.fontSize = "30px";
+            resetBtn.color = "white";
+            resetBtn.cornerRadius = 20;
+            resetBtn.background = "purple";
+            resetBtn.top = "20%";
+            resetBtn.left = "-40%";
+            advancedTexture.addControl(resetBtn);
+
+            // var Btn = BABYLON.GUI.Button.CreateSimpleButton("Btn", "print objects in meshes");
+            // Btn.width = "200px";
+            // Btn.height = "100px";
+            // Btn.fontSize = "30px";
+            // Btn.color = "white";
+            // Btn.cornerRadius = 20;
+            // Btn.background = "purple";
+            // Btn.top = "30%";
+            // Btn.left = "-40%";
+            // advancedTexture.addControl(Btn);
+
+
             //marker
             const marker = BABYLON.MeshBuilder.CreateTorus('marker', { diameter: 0.15, thickness: 0.05 });
             marker.isVisible = false;
@@ -182,51 +216,61 @@
             placeGrnd.onPointerUpObservable.add(function() {
                 // place the physics ground for objects to interact with
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "ground");
+                    addObject(scene, shadowGenerator,  physicsHelper, hitTest, anchors, "ground");
                 }
             });
 
             placeBall.onPointerUpObservable.add(function() {
                 // place a ball
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "ball");
+                    addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, "ball");
                 }
             });
 
             placeCube.onPointerUpObservable.add(function() {
-                // place a cube
+                // place a cube 
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "cube");
+                    addObject(scene, shadowGenerator,  physicsHelper, hitTest, anchors, "cube");
                 }
             });
 
             placeCylinder.onPointerUpObservable.add(function () {
                 // place a cylinder
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "cylinder");
+                    addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, "cylinder");
                 }
             });
 
             placeCone.onPointerUpObservable.add(function () {
                 // place a cone
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "cone");
+                    addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, "cone");
                 }
             });
 
             placeExplosion.onPointerUpObservable.add(function() {
                 // place explosion
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "explosion");
+                    addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, "explosion");
                 }
             });
 
             placeTornado.onPointerUpObservable.add(function() {
-                // place explosion
+                // place tornado
                 if (hitTest && anchors && xr.baseExperience.state === BABYLON.WebXRState.IN_XR) {
-                    addObject(scene, physicsHelper, hitTest, anchors, "tornado");
+                    addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, "tornado");
                 }
             });
+
+            resetBtn.onPointerUpObservable.add(function() {
+                // clear scene
+                clearScene(anchors, scene);
+            });
+
+            // Btn.onPointerUpObservable.add(function() {
+            //     // clear scene
+            //     printObjects(scene);
+            // });
   
             return scene;
         };
@@ -259,7 +303,7 @@
             engine.resize();
         });
 
-        function addObject(scene, physicsHelper, hitTest, anchors, type) {
+        function addObject(scene, shadowGenerator, physicsHelper, hitTest, anchors, type) {
             if (type == "ball") {
                 let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 16, diameter: 0.2});
                 var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial");
@@ -268,6 +312,9 @@
                 hitTest.transformationMatrix.decompose(sphere.scaling, sphere.rotationQuaternion, sphere.position);
                 sphere.position.y = 1;
                 sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                shadowGenerator.addShadowCaster(sphere);
+                shadowGenerator.getShadowMap().renderList.push(sphere);
+                sphere.recieveShadows = true;
             }
 
             if (type == "cube") {
@@ -278,6 +325,9 @@
                 hitTest.transformationMatrix.decompose(cube.scaling, cube.rotationQuaternion, cube.position);
                 cube.position.y = 1;
                 cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                shadowGenerator.addShadowCaster(cube);
+                shadowGenerator.getShadowMap().renderList.push(cube);
+                cube.recieveShadows = true;
             }
 
             if(type == "cylinder") {
@@ -288,6 +338,9 @@
                 hitTest.transformationMatrix.decompose(cylinder.scaling, cylinder.rotationQuaternion, cylinder.position);
                 cylinder.position.y = 1;
                 cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                shadowGenerator.addShadowCaster(cylinder);
+                shadowGenerator.getShadowMap().renderList.push(cylinder);
+                cylinder.recieveShadows = true;
             }
 
             if(type == "cone") {
@@ -298,6 +351,9 @@
                 hitTest.transformationMatrix.decompose(cone.scaling, cone.rotationQuaternion, cone.position);
                 cone.position.y = 1;
                 cone.physicsImpostor = new BABYLON.PhysicsImpostor(cone, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 0.2, restitution: 0.3 });        
+                shadowGenerator.addShadowCaster(cone);
+                shadowGenerator.getShadowMap().renderList.push(cone);
+                cone.recieveShadows = true;
             }
 
             if (type == "ground") {
@@ -305,10 +361,13 @@
                 //  spawn ground at anchor first before doing anything
                 var ground = new BABYLON.MeshBuilder.CreateBox("ground", { height: 1, width: 4, depth: 4 });
                 const groundMat = new BABYLON.StandardMaterial("groundMat");
-                groundMat.diffuseColor = new BABYLON.Color3.Blue();
+                groundMat.diffuseColor = new BABYLON.Color3.Gray();
                 ground.material = groundMat;
                 ground.setPivotMatrix(new BABYLON.Matrix.Translation(0, -0.5, 0), false);
                 ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.8, restitution: 0.7 });
+                shadowGenerator.addShadowCaster(ground);
+                shadowGenerator.getShadowMap().renderList.push(ground);
+                ground.recieveShadows = true;
                 anchors.onAnchorAddedObservable.add((anchor) => {
                     anchor.attachedNode = ground;
                 })
@@ -336,6 +395,7 @@
                 let box = BABYLON.MeshBuilder.CreateBox("Box", {size: 1});
                 hitTest.transformationMatrix.decompose(box.scaling, box.rotationQuaternion, box.position);
                 box.position.y = -2;
+                box.isVisible = false;
                 var origin = box.position;
                 var updraftEvent = physicsHelper.updraft(
                     origin,
@@ -356,14 +416,64 @@
                     }
                 );
                 vortexEvent.enable();
-                box.dispose();
                 setTimeout(function() {
+                        box.dispose();
                         updraftEvent.disable();
                         vortexEvent.disable();
                 },5000); 
             }
         }
         
+        function clearScene(anchors, scene) {
+            // console.log(scene.meshes);
+            // for (let i = 0; i < scene.meshes.length; i++) {
+            //     var mesh = scene.meshes[i];
+            //     console.log(mesh.name);
+            // }
+            // while(anchors.anchors.length){
+            //     anchors.anchors[0].remove();
+            // }
+            // console.log("anchors removed");
+            let objectTypes = ["box", "cone", "cylinder", "ground", "sphere"];
+           
+            let objCount = 0;
+            for (let i = 0; i < scene.meshes.length; i++) {
+                var mesh = scene.meshes[i];
+                for(let i = 0; i < objectTypes.length; i++)
+                {
+                    if (mesh.name == objectTypes[i]) {
+                        objCount++;
+                    }
+                }
+            }
+            let index = 0;
+            let deletedNum = 0;
+            while(objCount>0) {
+                var mesh = scene.meshes[index];
+                
+                for(let x = 0; x < objectTypes.length; x++)
+                {
+                    if (mesh.name == objectTypes[x]) {
+                        scene.meshes[index].dispose();
+                        index--;
+                        deletedNum++;
+                        objCount--;
+                    }
+                }
+                index++;
+            }
+        }
+
+        function printObjects(scene) {
+            console.log("meshes contains:");
+            for (let i = 0; i < scene.meshes.length; i++)
+            {
+                var mesh = scene.meshes[i];
+                console.log("i:", i, " ", mesh.name);
+            }
+        }
+
+
     </script>
 </body>
 </html>
