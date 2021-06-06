@@ -7,126 +7,160 @@
     <title>CSE 160 / Assignment 5</title>
 </head>
 <body>
-    <h1>CSE 160 / Assignment 4 / Prog 4</h1>
+    <h1>CSE 160 / AR Physics World</h1>
     <p>
-        Ivan Martinez-Arias / ivalmart@ucsc.edu
+        Ivan Martinez-Arias / ivalmart@ucsc.edu<br>
+        Alan Chen / alrichen@ucsc.edu
     </p>
     <p>
-        PROG 4 / May 23 2021
+        PROG 5 / June 6 2021
+        <!-- Add an image for our project -->
     </p>
     <!-- DESCRIPTION -->
     <h2>Description:</h2>
     <p>
-        A program where users are placed into a pre-rendered world of objects formed by sphere and cylinders where users are able 
-        to explore around the wvirtual world through a Perspective Viewpoint, as well as through an Orthographic Viewpoint. The user 
-        is able to use Camera Controls to explore and maneuver around the virtual world, as well as use a created animation to 
-        move around the center of the object world. Users are also able zoom in and out of the world to have a different Field of 
-        View when observing the virtual world normally.
+
     </p>
-    
+
+    <!-- REQUIREMENTS -->
+    <h2>Requirements:</h2>
+    <p>Any Android Device</p>
+
     <!-- LINKS -->
     <h2>Links:</h2>
-    <p><a href="driver.html">Program / Driver</a></p>
-    <p><a href="asg4.js">Javascript / asg4.js</a></p>
-    <p><a href="camera.js">Javascript / camera.js</a></p>
-    <p><a href="models/cylinder.js">Javascript / cylinder.js</a></p>
-    <h2>Other Resources from Lab:</h2>
-    <p><a href="models/model.js">Javascript / model.js</a></p>
-    <p><a href="models/sphere.js">Javscript / sphere.js</a></p>
+    <p>
+        <a href="index.html">Program / Driver</a><br>
+        <a href="https://avertec.github.io/ASG_5_BabylonJS/">Program / GitHub Pages</a><br>
+        <a href="README.md">README</a>
+    </p>
 
-    <!-- GUIDE TO USE PROGRAM -->
-    <h2>Guide to Use Program:</h2>
-    <u>Camera Controls</u>
+    <h2>Resources/Citations:</h2>
     <p>
-        Controls are above the Canvas with instructions. To move the camera's positions, use WASD controls to move forward, backwards 
-        and sideways. To move the camera in place, use IJKL controls to tilt up and down, as well as pan left and right.
+        <a href="https://playground.babylonjs.com/#RFTC4B#47">Babylon JS UI with DOM</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/webXR/introToWebXR">Babylon JS Intro to WebXR</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/webXR/webXRARFeatures">Babylon JS WebXR AR Features</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/physics/usingPhysicsEngine">Babylon JS Physics</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/mesh/transforms/center_origin/ref_frame">Babylon JS Coordinate Transformation</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/physics/usingPhysicsEngine#radial-explosion-impulseforce--gravitational-fields">Babylon Js Physics Engine</a><br>
+        <a href="https://playground.babylonjs.com/#UZHINX">Babylon Js Example of Physics Effects</a>
     </p>
-    <u>Zooming In and Out</u>
+
+    <!-- GUIDE TO RUN AND USE PROGRAM -->
+    <h2>Guide to Run Program:</h2>
+    <u>How to Run:</u>
     <p>
-        Below the Canvas contains a slider for zooming in and out of perspective. Users are able to adjust how far or near they want 
-        to view the world.
+        The program MUST be running on a live host in order for it to function. There are two 
+        sources in which users can try out the AR program.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;1. GitHub Pages - Users must access the 
+        <a href="https://avertec.github.io/ASG_5_BabylonJS/">GitHub Pages</a> link through an Android device 
+        in order to get the AR Experience.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;2. Apache Tomcat - Users are able to download the project folder in order to port 
+        forward the website to their Android device. Steps to download and run the program are as follows:<br>        
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Download <a href="https://tomcat.apache.org/download-10.cgi">Apache Tomcat</a> by going to the link and 
+            clicking on “32-bit/64-bit Windows Service Installer” on your PC<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Install Apache Tomcat and find it through Program Files (x86)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Go into Apache Software Foundation -> Tomcat 10.0 -> webapps -> ROOT<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Place the project folder into the ROOT folder<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Start the Apache Tomcat program<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Enable Developer Mode on the Android device and enable “USB Debugging”<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Open up Google Chrome on your PC and paste the following into a browser: <b>chrome://inspect/#devices</b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Verify if Port Forwarding is enabled and active<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Plug in Android device into PC and open up Google Chrome on the Android device<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Note:</b> To view the perspective of the phone on your PC, go to step (g) for the link and under the “Remote 
+            Target” title is where the Android device is. Click on “Inspect”<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            - Paste in the following on Google Chrome in the Port Forwarding page textbox: 
+            <b>http://localhost:8080/ASG_5_BabylonJS/index.html</b><br>
     </p>
-    <u>Resetting Camera Position</u>
+    <h2>Opening the Program:</h2>
     <p>
-        Pressing the "Reset Camera" button will reset the camera's position to where it originally starts when the program is 
-        opened.
+        Once the program is up and running on an Android device, the user will see a colored background with buttons 
+        on each side providing different functionalities. To enter into AR Mode, tap on the bottom right icon 
+        <img src="./images/arIcon.jpg" width="40px" height="25px">.
     </p>
-    <u>Switching Between Perspective and Orthographic Projections</u>
+    <h2>Program Functionality:</h2>
+    <u>Physics Engine:</u>
     <p>
-        Pressing the "Switch Projection" button will change the projection of the camera towards the virtual world. Users are able 
-        to observe which projection they are currently on by the text below the button that what the current projection is.
+        The program has a physics engine depending on the orientation the program entered AR Mode. Objects can move around 
+        the world with collision given by the user. There are also two buttons that interact with the objects given force.<br>
+        <b>Note:</b> If the user does not create a ground object into the world, the object will fall out of the world and 
+        will disappear.
     </p>
-    <u>Animation</u>
+    <u>Reticle:</u>
     <p>
-        Pressing the "Animation" button will turn on the camera animation to rotate around the center of the object's world. 
-        In order to turn off the animation, the user must press the "Animation" button once again to stop the animation and will 
-        reset the camera's position.
+        After the world has been generated, a green donut-shaped reticle will appear in the middle of the user's device. It 
+        acts as a cursor for the user to place down objects into the world, as well as interact with objects.
     </p>
-    <u>Creating / Controlling Cylinders</u>
+    <u>Adding Objects:</u>
     <p>
-        - To create a cylinder, you must input an N number that will represent the number of sides for the cylinder. 
-        Below the number input is a Color Box, where the user can decide what color shading the user wants on their 
-        created cylidner. Once the user has decided on N and the Color, they can click on "Add" to create the new cylinder.<br>
-        - To control a specific cylinder, users can click on the drop down menu containing all created cylinders and click 
-        on the numbered cylinder they would like to control.<br>
-        - To make every cylinder into a wireframe rather than completely filled out, users can use the "Wireframe" checkbox 
-        to view the wireframes of each cylinder.
+        There are 4 buttons the user can use to create objects. The objects the user can create are: Balls/Spheres, Cubes, 
+        Cylinders, and Cones. When pressed, it drops down the selected object where the cursor is with a random color given 
+        onto the world.
     </p>
-    <u>Transformations of Cylinders</u>
+    <u>Adding Ground:</u>
     <p>
-       - Users are able to transform each Cylinder Object through 3 options: Translate, Rotate, and Scale. Each transformation 
-       has 3 slides that are assigned to each axis on the 3D plane. Each slider performs the appropriate transformation depending 
-       on which axis it is being used on.
+        There is a button "Create Ground" that creates a floor for the user to place down objects on. Depending on where the 
+        cursor is will create the ground. 
     </p>
-    <u>Choosing Type of Shading / Updating the Canvas</u>
+    <u>Generating an Explosion/Tornado:</u>
     <p>
-        Below the user input of the cylinders, there is a Shading List that contains three possible choices: 
-        Flat Shading, Smooth Shading, and Wireframes. Choosing one from the list will adjust how each object on the 
-        canvas will be outputted as. To update the canvas, click on "Update" after selecting the desired shading choice.
+        Two buttons "Create Explosion" and "Create Tornado" will generate physics in regards to the button created. Explosions 
+        scatter the objects in respect to where the reticle is. Tornados will cause a swirl of objects in respect to the reticle.<br>
+        <b>Note:</b> The tornado is very weak in terms of power when pressed. To generate a stronger tornado effect, user can tap 
+        the button multiple times.
     </p>
-    <u>Toggling On/Off Light Sources</u>
+    <u>Resetting the World:</u>
     <p>
-        Below the table to transform cylinders around are two toggle switches that are ON at the start. Each switch 
-        corresponds to the appropriate light source labeled. To turn each specific light source ON/OFF, click on the 
-        toggle switch as such.
-        <b><u>Note:</u> If both the switches are OFF, the objects will only have Ambient Lighting.</b>
+        When the "Reset Scene" button is pressed, it will remove all objects of the world to reset the scene to when the program was 
+        first opened. 
     </p>
-    <u>Moving the Point Light Source</u>
-    <p>
-        The Point Light Source is represented as the small yellow sphere on the bottom part of the canvas. 
-        If the Point Light Source is toggled to be on, the user can adjust the point light source by adjusting 
-        which axes the user wants to move towards. 
-    </p>
+
     <!-- ISSUES -->
     <h2>Issues:</h2>
     <p>
-        * When tilting all the way up or down, the perspective of the world flips upside down. Continuing to rotate in 
-        the same direction will flip the world once again and the world will be in the normal perspective.<br>
-        * Increasing the zoom value past 20 or decreasing the zoom value past -10 seems to flip the world upside down and 
-        mirror the virtual world. Might be how the zoom value is calculated when dividing by 10 however I was not sure 
-        how to fix it. 
+        - AR Mode on thr program will not work on PC/Desktop unless there is AR support or an AR emulator.<br>
+        - When opening the program and going into Landscape Mode on the device before activating AR Mode, the 
+        buttons will overlap each other and appear very large. The buttons will scale to the screen correctly 
+        once the user enters AR Mode.<br>
+        - Depending on when AR mode is activated in respect to Landscape Mode or Portrait Mode, the physics will 
+        only be oriented to when the scene was first created. Example: If the user starts the program on portrait mode 
+        and re-enters the program in landscape mode, the physics is bound to portrait mode and objects will fall sideways. 
+        - Buttons will seem streteched or squished when the user enters and exits out of AR mode multiple times. 
+        Refreshing the page will fix the issue.
     </p>
-    
-    <!-- EXAMPLE OUTPUTS -->
-    <h2>Example Outputs:</h2>
-    <p>
-        <u>Perspective Projection:</u>
-    </p>
-        <img src="images/perspectiveProjection.PNG" width="300" height="400">
 
+    <!-- OP-ED -->
+    <h2>Op-Ed:</h2>
     <p>
-        <u>Orthographic Projection:</u>
+        Ivan: 
+        <i>
+            The class has certainly been an experience and while I had a lot of difficulty coming into the class, all 
+            the class information and material was very interesting and fascinating to learn. Creating objects, virtual 
+            worlds, and lighting have all been very fun to do and was satisfying to complete each project to its fullest 
+            ability. Testing out the program to visualize things and the process of reaching the completed form was always 
+            enjoyable.<br>
+            Some things that stood out to me was our ASG3 when creating the smooth normals for our cylinders we made a while ago. 
+            Visualizing the difference between the normal cylidner we created with the given sides to see how it was incredibly 
+            smooth just made me feel happy seeing how well it worked out with what we did up to that point. 
+        </i><br><br>
+        Alan:
+        <i>
+            <!-- put your op-ed -->
+        </i>
     </p>
-        <img src="images/orthographicProjection.PNG" width="300" height="400">
-    
-    <p>
-        <u>Zoomed In:</u>
-    </p>
-        <img src="images/zoomIn.PNG" width="300" height="400">
-    
-    <p>
-        <u>Zoomed Out:</u>
-    </p>
-        <img src="images/zoomOut.PNG" width="300" height="400">
+
+    <!-- EXAMPLE OUTPUT -->
+    <h2>Example of Program:</h2>
+
 </body>
 </html>
