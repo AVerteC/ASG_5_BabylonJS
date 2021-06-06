@@ -71,7 +71,7 @@
             // sphereSun.position = light2.position; 
             var shadowGenerator = new BABYLON.ShadowGenerator(1024, light2);
             // shadowGenerator.useBlurExponentialShadowMap = true;
-            // shadowGenerator.setDarkness(0);
+            shadowGenerator.setDarkness(0.5);
 
             const xr = await scene.createDefaultXRExperienceAsync({
                 uiOptions: {
@@ -380,7 +380,7 @@
             }
 
             if(type == "slug") {
-                let cube = BABYLON.MeshBuilder.CreateBox("box", {size: 0.5});
+                let cube = BABYLON.MeshBuilder.CreateBox("box", {size: 0.3});
                 var cubeMat = new BABYLON.StandardMaterial("cubeMat");
                 cubeMat.diffuseTexture = new BABYLON.Texture("textures/sammysmallface350.jpg");
                 cubeMat.specularTexture = new BABYLON.Texture("textures/sammysmallface350.jpg");
