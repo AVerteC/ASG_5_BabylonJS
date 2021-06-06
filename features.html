@@ -23,10 +23,21 @@
     
     <!-- LINKS -->
     <h2>Links:</h2>
-    <p><a href="driver.html">Program / Driver</a></p>
-    <p><a href="README.md">README</a></p>
+    <p>
+        <a href="index.html">Program / Driver</a><br>
+        <a href="README.md">README</a>
+    </p>
 
-    <h2>Other Resources from Lab:</h2>
+    <h2>Resources/Citations:</h2>
+    <p>
+        <a href="https://playground.babylonjs.com/#RFTC4B#47">Babylon JS UI with DOM</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/webXR/introToWebXR">Babylon JS Intro to WebXR</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/webXR/webXRARFeatures">Babylon JS WebXR AR Features</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/physics/usingPhysicsEngine">Babylon JS Physics</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/mesh/transforms/center_origin/ref_frame">Babylon JS Coordinate Transformation</a><br>
+        <a href="https://doc.babylonjs.com/divingDeeper/physics/usingPhysicsEngine#radial-explosion-impulseforce--gravitational-fields">Babylon Js Physics Engine</a><br>
+        <a href="https://playground.babylonjs.com/#UZHINX">Babylon Js Example of Physics Effects</a>
+    </p>
 
     <!-- GUIDE TO RUN AND USE PROGRAM -->
     <h2>Guide to Run Program:</h2>
@@ -87,18 +98,40 @@
     <u>Adding Objects</u>
     <p>
         There are 4 buttons the user can use to create objects. The objects the user can create are: Balls/Spheres, Cubes, 
-        Cylinders, and Cones. When pressed, it drops down the selected object with a random color given onto the world.
+        Cylinders, and Cones. When pressed, it drops down the selected object where the cursor is with a random color given 
+        onto the world.
     </p>
     <u>Adding Ground</u>
     <p>
-
+        There is a button "Create Ground" that creates a floor for the user to place down objects on. Depending on where the 
+        cursor is will create the ground. 
+    </p>
+    <u>Generating an Explosion/Tornado</u>
+    <p>
+        Two buttons "Create Explosion" and "Create Tornado" will generate physics in regards to the button created. Explosions 
+        scatter the objects in respect to where the reticle is. Tornados will cause a swirl of objects in respect to the reticle.<br>
+        <b>Note:</b> The tornado is very weak in terms of power when pressed. To generate a stronger tornado effect, user can tap 
+        the button multiple times.
+    </p>
+    <u>Resetting the World</u>
+    <p>
+        When the "Reset Scene" button is pressed, it will remove all objects of the world to reset the scene to when the program was 
+        first opened. 
     </p>
 
 
     <!-- ISSUES -->
     <h2>Issues:</h2>
     <p>
-        - AR Mode on thr program will not work on PC/Desktop unless there is AR support or an AR emulator.
+        - AR Mode on thr program will not work on PC/Desktop unless there is AR support or an AR emulator.<br>
+        - When opening the program and going into Landscape Mode on the device before activating AR Mode, the 
+        buttons will overlap each other and appear very large. The buttons will scale to the screen correctly 
+        once the user enters AR Mode.<br>
+        - Depending on when AR mode is activated in respect to Landscape Mode or Portrait Mode, the physics will 
+        only be oriented to when the scene was first created. Example: If the user starts the program on portrait mode 
+        and re-enters the program in landscape mode, the physics is bound to portrait mode and objects will fall sideways. 
+        - Buttons will seem streteched or squished when the user enters and exits out of AR mode multiple times. 
+        Refreshing the page will fix the issue.
     </p>
 
     <!-- EXAMPLE OUTPUT -->
