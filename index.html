@@ -58,19 +58,11 @@
             var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
             camera.setTarget(BABYLON.Vector3.Zero());
             camera.attachControl(canvas, true);
-            // var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, -1, -1), scene);
-            // light.intensity = 0.7;
 
             var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(-1, -1, 0), scene);
             light2.intensity = 1.0;
             light2.position = new BABYLON.Vector3(80,40,80);
-            // let sphereSun = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 16, diameter: 30});
-            // var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial");
-            // sphereMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-            // sphereSun.material = sphereMaterial;
-            // sphereSun.position = light2.position; 
             var shadowGenerator = new BABYLON.ShadowGenerator(256, light2);
-            // shadowGenerator.useBlurExponentialShadowMap = true;
             shadowGenerator.setDarkness(0.5);
 
             const xr = await scene.createDefaultXRExperienceAsync({
@@ -448,15 +440,6 @@
         }
         
         function clearScene(anchors, scene) {
-            // console.log(scene.meshes);
-            // for (let i = 0; i < scene.meshes.length; i++) {
-            //     var mesh = scene.meshes[i];
-            //     console.log(mesh.name);
-            // }
-            // while(anchors.anchors.length){
-            //     anchors.anchors[0].remove();
-            // }
-            // console.log("anchors removed");
             let objectTypes = ["box", "cone", "cylinder", "ground", "sphere"];
            
             let objCount = 0;
